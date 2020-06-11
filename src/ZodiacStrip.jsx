@@ -130,8 +130,6 @@ export default class ZodiacStrip extends React.Component {
 
         this.shade.alpha = 0.7;
 
-        console.log(`xxx baby: ${x}`);
-
         let targetPlanetAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
         let sunAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
 
