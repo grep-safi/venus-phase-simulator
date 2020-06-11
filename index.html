@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>
+        Planetary Configurations Simulator
+    </title>
+    <script src="dist/css.js"></script>
+    <style type="text/css">
+        html {
+            background: rgb(51, 57, 64);
+        }
+
+        body>.container {
+            background: rgb(51, 57, 64);
+            width: 960px;
+        }
+
+        #sim-container {
+            background: rgb(51, 57, 64);
+            user-select: none;
+            width: 930px;
+        }
+
+        .rowx {
+            background: rgb(51, 57, 64);
+            display: inline-block;
+            width: 307px;
+        }
+
+        .controls {
+            background: rgb(212, 212, 212);
+            margin-bottom: 15px;
+            border: 2px solid rgb(51, 57, 64);
+        }
+
+        .col {
+            background: rgb(212, 212, 212);
+            margin-bottom: 10px;
+            border: 2px solid rgb(51, 57, 64);
+        }
+
+        .col .presets .controls {
+
+            display: inline-block;
+        }
+
+        .zodiacStrip {
+            position: relative;
+            /*float: left;*/
+            left: 15px;
+            bottom: 85px;
+        }
+
+        #days {
+            background: rgb(212, 212, 212);
+            border: 2px solid rgb(51, 57, 64);
+
+            bottom: 5px;
+            position: relative;
+            min-width: 307px;
+            height: 60px;
+        }
+
+        #resetButton {
+            position: relative;
+            float: top;
+            bottom: 27px;
+            margin-left: 175px;
+        }
+
+        #elapsedText {
+            position: relative;
+            top: 15px;
+        }
+
+        #survey {
+            position: relative;
+            top: 5px;
+        }
+
+        .input[type="number"] {
+            width: 52px;
+            border-radius: 2px;
+        }
+
+        .observerInput {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .observerSlider {
+            display: inline-block;
+            margin-left: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .observerPresets {
+            display: inline-block;
+            margin-left: 50px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .targetInput {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .targetSlider {
+            display: inline-block;
+            margin-left: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .targetPresets {
+            display: inline-block;
+            margin-left: 50px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .animationText {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .animationSlider {
+            display: inline-block;
+            margin-left: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .animationButton {
+            display: inline-block;
+            margin-left: 50px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            max-width: 30%;
+        }
+
+        .radiusText label {
+            font-size: 15px;
+        }
+
+        #radP #radText {
+            display: inline-block;
+        }
+
+        #text {
+            color: rgb(36, 27, 35);
+        }
+
+        body {
+            background: rgb(51, 57, 64);
+        }
+
+        /* .increment-area button {
+            font-weight: bold;
+            width: 27px;
+       } */
+
+        .MainView>canvas {
+            background: rgb(20, 20, 170);
+            width: 600px;
+            height: 460px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="sim-container">
+        </div>
+    </div>
+    <div aria-hidden="true" aria-labelledby="helpModalLabel" class="modal" id="helpModal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">
+                        Help
+                    </h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This simulator models the movement of planets around the sun in a simplified Copernican model
+                        of the solar system.
+                        <br><br>
+                        TIP: View the web page at 90% zoom (if needed).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="true" aria-labelledby="aboutModalLabel" class="modal" id="aboutModal" role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aboutModalLabel">
+                        About
+                    </h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="sim-version">
+                        <b>This simulator is an HTML5 reimplementation of the Solar System Configurations simulator
+                            that was originally developed as part of the Nebraska Astronomy Applet Project.</b>
+                        <br><br>
+                        The original simulation, along with related teaching materials, may be found at:
+                        <br><a href="https://astro.unl.edu" target="_blank">https://astro.unl.edu</a>
+                        <br><br>
+                        This simulator is part of the Foothill AstroSims project, which is aiming to reimplement,
+                        in HTML5, Flash-based simulations that are used in Foothill Astronomy courses.
+                        <br><br>
+                        The project's efforts have drawn heavily on work done by Nik Nyby at Columbia University:
+                        <br><a href="https://github.com/ccnmtl/astro-simulations" target="_blank">https://github.com/ccnmtl/astro-simulations</a>
+                        <br><br><br>
+                        <i>Funding for Foothill AstroSims provided by an Equity & Innovation Grant from Foothill College.</i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dist/vendor.js"></script>
+    <script src="dist/bundle.js"></script>
+</body>
+
+</html>
