@@ -42,6 +42,7 @@ export default class ZodiacStrip extends React.Component {
         const stage = new PIXI.Container();
         this.app.stage.addChild(stage);
 
+        me.shade = null;
         me.targetPlanetZodiacContainer = me.drawTargetPlanetZodiac();
 
         me.start();
@@ -60,8 +61,18 @@ export default class ZodiacStrip extends React.Component {
         targetPlanetImage.height = size;
         targetPlanetContainer.addChild(targetPlanetImage);
 
+        this.shade = new PIXI.Graphics();
+        this.shade.beginFill(0x000000);
+        this.shade.alpha = 0.7;
+        this.shade.arc(
+            WIDTH / 2,
+            HEIGHT / 2,
+            size - 16.0,
+            -Math.PI / 2,
+            Math.PI / 2);
 
         this.app.stage.addChild(targetPlanetContainer);
+        this.app.stage.addChild(this.shade);
 
         return targetPlanetContainer;
     }
@@ -80,6 +91,13 @@ export default class ZodiacStrip extends React.Component {
         cancelAnimationFrame(this.frameId);
     }
 
+    getDistance(targetPos, observerPos) {
+        let diffX = Math.pow((targetPos.x - observerPos.x), 2);
+        let diffY = Math.pow((targetPos.y - observerPos.y), 2);
+
+        return Math.pow((diffX + diffY), 0.5);
+    }
+
     getElongationAngle() {
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
         let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
@@ -94,7 +112,25 @@ export default class ZodiacStrip extends React.Component {
         targetPos.y -= 460;
 
         targetPos.y *= -1;
-        // this.updateZIndex(observerPos, targetPos);
+        let x = this.getDistance(observerPos, targetPos);
+        let maxSize = 400;
+        this.targetPlanetZodiacContainer.width = maxSize - x;
+        this.targetPlanetZodiacContainer.height = maxSize - x;
+
+
+        this.shade.clear();
+        this.shade.beginFill(0x000000);
+        this.shade.alpha = 0.7;
+        this.shade.arc(
+            WIDTH / 2,
+            HEIGHT / 2,
+            (100) - 16,
+            -Math.PI / 2 - 0.3,
+            Math.PI / 2 + 0.3);
+
+        this.shade.alpha = 0.7;
+
+        console.log(`xxx baby: ${x}`);
 
         let targetPlanetAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
         let sunAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
