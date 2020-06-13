@@ -130,6 +130,7 @@ class PlanetaryConfigSim extends React.Component {
                         <div className="radiusText">
                             <label htmlFor="radTargetPlanetRange" id="text">Radius of target planet's orbit (AU):</label>
                         </div>
+
                         <div className="targetInput">
                             <form onSubmit={this.onSubmitTarget.bind(this)}>
                                 <input

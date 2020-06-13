@@ -1,15 +1,19 @@
 import React from 'react';
 import * as PIXI from 'pixi.js';
 import PropTypes from 'prop-types';
+import {radToDeg} from "./utils";
 
 const WIDTH = 600;
-const HEIGHT = 400;
+const HEIGHT = 300;
+
+const MAINVIEW_WIDTH = 600;
+const MAINVIEW_HEIGHT = 460;
 
 const getPlanetPos = function(radius, phase) {
     return new PIXI.Point(
         // these magic numbers come from this.orbitCenter
-        radius * Math.cos(-phase) + 600,
-        radius * Math.sin(-phase) + 460);
+        radius * Math.cos(-phase) + MAINVIEW_WIDTH,
+        radius * Math.sin(-phase) + MAINVIEW_HEIGHT);
 };
 
 export default class ZodiacStrip extends React.Component {
@@ -49,7 +53,7 @@ export default class ZodiacStrip extends React.Component {
     }
 
     drawTargetPlanetZodiac() {
-        const size = 100;
+        const size = 200;
 
         const targetPlanetContainer = new PIXI.Container();
         targetPlanetContainer.name = 'targetPlanetZodiac';
@@ -91,50 +95,29 @@ export default class ZodiacStrip extends React.Component {
         cancelAnimationFrame(this.frameId);
     }
 
-    getDistance(targetPos, observerPos) {
-        let diffX = Math.pow((targetPos.x - observerPos.x), 2);
-        let diffY = Math.pow((targetPos.y - observerPos.y), 2);
+    getDistance(firstBody, secondBody) {
+        let diffX = Math.pow((firstBody.x - secondBody.x), 2);
+        let diffY = Math.pow((firstBody.y - secondBody.y), 2);
 
-        return Math.pow((diffX + diffY), 0.5);
+        return Math.sqrt(diffX + diffY);
     }
 
     getElongationAngle() {
+
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
         let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
         let sunPos = new PIXI.Point(0, 0);
 
-        observerPos.x -= 600;
-        observerPos.y -= 460;
-
+        observerPos.x -= MAINVIEW_WIDTH;
+        observerPos.y -= MAINVIEW_HEIGHT;
         observerPos.y *= -1;
 
-        targetPos.x -= 600;
-        targetPos.y -= 460;
-
+        targetPos.x -= MAINVIEW_WIDTH;
+        targetPos.y -= MAINVIEW_HEIGHT;
         targetPos.y *= -1;
-        let x = this.getDistance(observerPos, targetPos);
-        let maxSize = 400;
-        this.targetPlanetZodiacContainer.width = maxSize - x;
-        this.targetPlanetZodiacContainer.height = maxSize - x;
-
-
-        this.shade.clear();
-        this.shade.beginFill(0x000000);
-        this.shade.alpha = 0.7;
-        this.shade.arc(
-            WIDTH / 2,
-            HEIGHT / 2,
-            (100) - 16,
-            -Math.PI / 2 - 0.3,
-            Math.PI / 2 + 0.3);
-
-        this.shade.alpha = 0.7;
 
         let targetPlanetAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
         let sunAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
-
-        this.targetPlanetLongitude = targetPlanetAngle;
-        this.sunLongitude = sunAngle;
 
         let holdSunAng = sunAngle;
         let holdTargetPlanetAng = targetPlanetAngle;
@@ -160,9 +143,41 @@ export default class ZodiacStrip extends React.Component {
             propsElongAngle -= temp * 2;
         }
 
-        this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
+        let distObserverSun = this.props.radiusObserverPlanet;
+        let distTargetSun = this.props.radiusTargetPlanet;
+        let distObserverTarget = this.getDistance(observerPos, targetPos);
 
-        // return elongationAngle;
+        let targetElongAng = this.getTargetElongAng(distObserverTarget, distTargetSun, distObserverSun);
+        this.drawMoonPhase(distObserverTarget, targetElongAng);
+
+        this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
+    }
+
+    getTargetElongAng(a, b, c) {
+        let numerator = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
+        let denominator = (2 * a * b);
+        let val = numerator / denominator;
+        if (val > 1) val = 1;
+        if (val < -1) val = -1;
+        let ans = Math.acos(val);
+        if (!ans) ans = 0;
+        return ans;
+    }
+
+    drawMoonPhase(separationDistance, targetElongation) {
+        const minPixelSize = 100;
+        const maxPixelSize = 275;
+
+        const minDist = Math.abs(this.props.radiusTargetPlanet - this.props.radiusObserverPlanet);
+        const maxDist = this.props.radiusObserverPlanet + this.props.radiusTargetPlanet;
+
+        // const linearScale = (input) => ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize) + minPixelSize;
+        const linearScale = (input) => maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize);
+
+        const targetPlanetSize = linearScale(separationDistance);
+        console.log(`the current sizezz: ${targetPlanetSize}`);
+        this.targetPlanetZodiacContainer.width = targetPlanetSize;
+        this.targetPlanetZodiacContainer.height = targetPlanetSize;
     }
 
     animate() {
