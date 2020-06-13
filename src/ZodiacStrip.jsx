@@ -66,14 +66,6 @@ export default class ZodiacStrip extends React.Component {
         targetPlanetContainer.addChild(targetPlanetImage);
 
         this.shade = new PIXI.Graphics();
-        this.shade.beginFill(0x000000);
-        this.shade.alpha = 0.7;
-        this.shade.arc(
-            WIDTH / 2,
-            HEIGHT / 2,
-            size - 16.0,
-            -Math.PI / 2,
-            Math.PI / 2);
 
         this.app.stage.addChild(targetPlanetContainer);
         this.app.stage.addChild(this.shade);
@@ -171,13 +163,25 @@ export default class ZodiacStrip extends React.Component {
         const minDist = Math.abs(this.props.radiusTargetPlanet - this.props.radiusObserverPlanet);
         const maxDist = this.props.radiusObserverPlanet + this.props.radiusTargetPlanet;
 
-        // const linearScale = (input) => ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize) + minPixelSize;
         const linearScale = (input) => maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize);
 
         const targetPlanetSize = linearScale(separationDistance);
-        console.log(`the current sizezz: ${targetPlanetSize}`);
         this.targetPlanetZodiacContainer.width = targetPlanetSize;
         this.targetPlanetZodiacContainer.height = targetPlanetSize;
+
+        this.drawShade(targetPlanetSize / 2, targetElongation);
+    }
+
+    drawShade(radius, angle) {
+        this.shade.clear();
+        this.shade.beginFill(0x000000);
+        this.shade.alpha = 0.7;
+        this.shade.arc(
+            WIDTH / 2,
+            HEIGHT / 2,
+            radius,
+            -Math.PI / 2,
+            Math.PI / 2);
     }
 
     animate() {
