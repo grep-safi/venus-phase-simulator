@@ -46,7 +46,7 @@ export default class ZodiacStrip extends React.Component {
         const stage = new PIXI.Container();
         this.app.stage.addChild(stage);
 
-        me.shade = null;
+        me.leftShade = null;
         me.targetPlanetZodiacContainer = me.drawTargetPlanetZodiac();
 
         me.start();
@@ -65,10 +65,10 @@ export default class ZodiacStrip extends React.Component {
         targetPlanetImage.height = size;
         targetPlanetContainer.addChild(targetPlanetImage);
 
-        this.shade = new PIXI.Graphics();
+        this.leftShade = new PIXI.Graphics();
 
         this.app.stage.addChild(targetPlanetContainer);
-        this.app.stage.addChild(this.shade);
+        this.app.stage.addChild(this.leftShade);
 
         return targetPlanetContainer;
     }
@@ -173,15 +173,25 @@ export default class ZodiacStrip extends React.Component {
     }
 
     drawShade(radius, angle) {
-        this.shade.clear();
-        this.shade.beginFill(0x000000);
-        this.shade.alpha = 0.7;
-        this.shade.arc(
+        this.leftShade.clear();
+        this.leftShade.pivot = new PIXI.Point(0, 0);
+        this.leftShade.beginFill(0x000000);
+        this.leftShade.alpha = 0.7;
+        let shift = -0.5;
+        this.leftShade.arc(
+            // (1 / Math.pow(shift, 2)) * (WIDTH / 2),
             WIDTH / 2,
             HEIGHT / 2,
             radius,
             -Math.PI / 2,
             Math.PI / 2);
+
+        this.leftShade.scale.x = shift;
+        this.leftShade.position.x = ((WIDTH / 2) - (shift * (WIDTH / 2)));
+
+
+        let s = 1;
+        // this.targetPlanetZodiacContainer.scale.x = s;
     }
 
     animate() {
