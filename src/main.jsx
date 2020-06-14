@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import MainView from './MainView';
 import ZodiacStrip from './ZodiacStrip';
 import { forceNumber } from './utils';
+import MoonPhaseView from "./MoonPhaseView";
 
 class PlanetaryConfigSim extends React.Component {
     constructor(props) {
@@ -270,6 +271,12 @@ class PlanetaryConfigSim extends React.Component {
                         updateAngles={this.updateAngles.bind(this)}
                     />
                 </div>
+
+                <div>
+                    <MoonPhaseView
+                        moonAngle={this.state.elongationAngle}
+                    />
+                </div>
             </div>
         </React.Fragment>;
     }
@@ -428,11 +435,13 @@ class PlanetaryConfigSim extends React.Component {
     }
 
     updateAngles(targetAng, sunAng, elongationAng) {
-        this.setState({
-            targetAngle: targetAng,
-            sunAngle: sunAng,
-            elongationAngle: elongationAng
-        });
+        if (this.state.elongationAngle !== elongationAng) {
+            this.setState({
+                targetAngle: targetAng,
+                sunAngle: sunAng,
+                elongationAngle: elongationAng
+            });
+        }
     }
 
     updateMultiplier() {
