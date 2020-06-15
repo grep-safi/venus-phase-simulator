@@ -174,18 +174,9 @@ export default class TargetPlanetPhase extends React.Component {
 
         this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
     }
-    getTargetElongAng(a, b, c) {
-        let numerator = Math.pow(a, 2) + Math.pow(b, 2) - Math.pow(c, 2);
-        let denominator = (2 * a * b);
-        let val = numerator / denominator;
-        if (val > 1) val = 1;
-        if (val < -1) val = -1;
-        let ans = Math.acos(val);
-        if (!ans) ans = 0;
-        return ans;
-    }
+
     drawTargetPlanetSize(separationDistance, targetElongation) {
-        const minPixelSize = 100;
+        const minPixelSize = 50;
         const maxPixelSize = 275;
 
         const minDist = Math.abs(this.props.radiusTargetPlanet - this.props.radiusObserverPlanet);
