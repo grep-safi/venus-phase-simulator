@@ -61,7 +61,6 @@ export default class MainView extends React.Component {
 
             antialias: true,
             resolution: Math.min(window.devicePixelRatio, 3) || 1,
-            // autoDensity: true,
         });
 
         this.el.appendChild(this.app.view);
@@ -179,7 +178,7 @@ export default class MainView extends React.Component {
         shade.arc(
             0,
             0,
-            21,
+            20.5,
             startAngle,
             endAngle);
     }
