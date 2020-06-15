@@ -36,14 +36,12 @@ export default class MainView extends React.Component {
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
 
-        // this.onSunMove = this.onSunMove.bind(this);
         this.onObserverPlanetMove = this.onObserverPlanetMove.bind(this);
         this.onTargetPlanetMove = this.onTargetPlanetMove.bind(this);
         this.onConstellationMove = this.onConstellationMove.bind(this);
 
         this.constellationsText = [];
         this.constellations = [];
-        this.sprite = null;
     }
 
     render() {
@@ -546,7 +544,18 @@ export default class MainView extends React.Component {
         observerPlanet.height = 20 * 2;
         observerPlanet.anchor.set(0.5);
         observerPlanetContainer.addChild(observerPlanet);
-        this.sprite = observerPlanet;
+
+        const shade = new PIXI.Graphics();
+        shade.beginFill(0x00FF00);
+        shade.alpha = 0.7;
+        shade.arc(
+            0,
+            0,
+            20,
+            -Math.PI / 2,
+            Math.PI / 2);
+        this.observerPlanetShade = shade;
+        observerPlanetContainer.addChild(shade);
 
         observerPlanetContainer
         // events for drag start
@@ -562,6 +571,7 @@ export default class MainView extends React.Component {
             .on('touchmove', this.onObserverPlanetMove);
 
         this.app.stage.addChild(observerPlanetContainer);
+        // this.app.stage.addChild(shade);
         return observerPlanetContainer;
     }
 
@@ -585,6 +595,18 @@ export default class MainView extends React.Component {
         targetPlanet.height = 20 * 2;
         targetPlanet.anchor.set(0.5);
         targetPlanetContainer.addChild(targetPlanet);
+
+        const shade = new PIXI.Graphics();
+        shade.beginFill(0x00FF00);
+        shade.alpha = 0.7;
+        shade.arc(
+            0,
+            0,
+            20,
+            -Math.PI / 2,
+            Math.PI / 2);
+        this.targetPlanetShade = shade;
+        targetPlanetContainer.addChild(shade);
 
         targetPlanetContainer
         // events for drag start
@@ -679,23 +701,9 @@ export default class MainView extends React.Component {
     }
 
     onDragEnd() {
-        this.draggingSun = false;
         this.draggingObserverPlanet = false;
         this.draggingTargetPlanet = false;
         this.data = null;
-    }
-
-    onSunMove(e) {
-        if (e.target && e.target.name === 'sun' &&
-            !this.state.isHoveringOnSun &&
-            !this.draggingObserverPlanet &&
-            !this.draggingTargetPlanet
-           ) {
-            this.setState({isHoveringOnSun: true});
-        }
-        if (!e.target && this.state.isHoveringOnSun) {
-            this.setState({isHoveringOnSun: false});
-        }
     }
 
     onObserverPlanetMove(e) {

@@ -87,9 +87,6 @@ export default class ZodiacStrip extends React.Component {
         let targetPlanetAngle = Math.atan2(observerPos.y - targetPos.y, observerPos.x - targetPos.x);
         let sunAngle = Math.atan2(sunPos.y - targetPos.y, sunPos.x - targetPos.x);
 
-        let holdSunAng = sunAngle;
-        let holdTargetPlanetAng = targetPlanetAngle;
-
         if (-Math.PI < sunAngle && sunAngle < 0) {
             sunAngle += 2 * Math.PI;
         }
@@ -104,16 +101,30 @@ export default class ZodiacStrip extends React.Component {
             elongationAngle += 2 * Math.PI;
         }
 
-        let propsElongAngle = elongationAngle;
-
-        if (propsElongAngle > Math.PI) {
-            let temp = propsElongAngle - Math.PI;
-            propsElongAngle -= temp * 2;
-        }
-
         return elongationAngle;
-        // console.log(`tragedy anglez: ${radToDeg(propsElongAngle)}`);
     }
+
+    // getRelativeAngle(mainBody, firstBody, secondBody) {
+    //     let firstBodyAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
+    //     let secondBodyAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
+    //
+    //     let holdSunAng = sunAngle;
+    //     let holdTargetPlanetAng = targetPlanetAngle;
+    //
+    //     if (-Math.PI < sunAngle && sunAngle < 0) {
+    //         sunAngle += 2 * Math.PI;
+    //     }
+    //
+    //     if (-Math.PI < targetPlanetAngle && targetPlanetAngle < 0) {
+    //         targetPlanetAngle += 2 * Math.PI;
+    //     }
+    //
+    //     let elongationAngle = targetPlanetAngle - sunAngle;
+    //
+    //     if (elongationAngle < 0) {
+    //         elongationAngle += 2 * Math.PI;
+    //     }
+    // }
 
     getElongationAngle() {
 
@@ -156,13 +167,9 @@ export default class ZodiacStrip extends React.Component {
             propsElongAngle -= temp * 2;
         }
 
-        let distObserverSun = this.props.radiusObserverPlanet;
-        let distTargetSun = this.props.radiusTargetPlanet;
         let distObserverTarget = this.getDistance(observerPos, targetPos);
 
-        let targetElongAng2 = this.getTargetElongAng(distObserverTarget, distTargetSun, distObserverSun);
         let targetElongAng = this.getTargetAngle();
-        console.log(`this is the difference: ${radToDeg(targetElongAng)} - ${radToDeg(targetElongAng2)} = ${Math.round(radToDeg(targetElongAng - targetElongAng2))}`);
         this.drawTargetPlanetSize(distObserverTarget, targetElongAng);
 
         this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
@@ -190,9 +197,7 @@ export default class ZodiacStrip extends React.Component {
         this.targetPlanet.width = targetPlanetSize;
         this.targetPlanet.height = targetPlanetSize;
 
-        // this.drawShades();
         this.hiddenTargetPlanet.visible = true;
-        // console.log(`target elongation: ${radToDeg(targetElongation)}`);
         this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), targetPlanetSize / 2);
     }
 
