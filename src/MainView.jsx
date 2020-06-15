@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as PIXI from 'pixi.js';
+import {radToDeg} from "./utils";
 
 // The coordinates for the center of the canvas
 // REMINDER: (0,0) is at the top left corner and
@@ -143,6 +144,8 @@ export default class MainView extends React.Component {
         this.updateArrows();
         this.updateArc();
         this.updateConstellation();
+        this.updateShade(this.observerPlanetShade, this.props.observerPlanetAngle);
+        this.updateShade(this.targetPlanetShade, this.props.targetPlanetAngle);
 
         if (this.state.isHoveringOnObserverPlanet || this.draggingObserverPlanet) {
             this.observerPlanetHighlight.visible = true;
@@ -157,6 +160,24 @@ export default class MainView extends React.Component {
         }
 
         this.frameId = requestAnimationFrame(this.animate);
+    }
+
+    updateShade(shade, angle) {
+        let startAngle = -Math.PI / 2;
+        let endAngle = Math.PI / 2;
+
+        startAngle -= angle;
+        endAngle -= angle;
+
+        shade.clear();
+        shade.beginFill(0x000000);
+        shade.alpha = 0.7;
+        shade.arc(
+            0,
+            0,
+            20,
+            startAngle,
+            endAngle);
     }
 
     drawText(name, bodyRadius, target) {
@@ -546,7 +567,7 @@ export default class MainView extends React.Component {
         observerPlanetContainer.addChild(observerPlanet);
 
         const shade = new PIXI.Graphics();
-        shade.beginFill(0x00FF00);
+        shade.beginFill(0x000000);
         shade.alpha = 0.7;
         shade.arc(
             0,
