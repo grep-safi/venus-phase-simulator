@@ -30,12 +30,7 @@ export default class MoonPhaseView extends React.Component {
         });
         this.el.appendChild(this.app.view);
 
-        this.app.loader.add('moon', 'img/grey-circle.png');
-
-        this.app.loader.load((loader, resources) => {
-            me.moon = resources.moon;
-            me.draw();
-        });
+        this.draw();
     }
     componentDidUpdate(prevProps) {
         if (prevProps.moonAngle !== this.props.moonAngle) {
@@ -50,7 +45,6 @@ export default class MoonPhaseView extends React.Component {
             this.convertPhase(this.props.moonAngle));
     }
     drawMoon(app) {
-        // const moon = new PIXI.Sprite(this.moon.texture);
         const moon = new PIXI.Sprite(PIXI.Texture.from('img/grey-circle.png'));
         moon.width = 220;
         moon.height = 220;
@@ -89,21 +83,17 @@ export default class MoonPhaseView extends React.Component {
         this.hiddenMoon = hiddenMoon;
     }
     drawPhase(leftShade, rightShade, phase) {
-
-        // leftShade.position.y += 30;
-        // rightShade.position.y += 30;
-
-        this.leftShade.clear();
-        this.leftShade.beginFill(0x000000, 0.7);
-        this.leftShade.arc(this.center.x * 2, this.center.y * 2,
-            this.radius - 30, Math.PI / 2, -Math.PI / 2);
-        this.leftShade.endFill();
-
-        this.rightShade.clear();
-        this.rightShade.beginFill(0x000000, 0.7);
-        this.rightShade.arc(this.center.x * 2, this.center.y * 2,
-            this.radius - 30, -Math.PI / 2, Math.PI / 2);
-        this.rightShade.endFill();
+        // this.leftShade.clear();
+        // this.leftShade.beginFill(0x000000, 0.7);
+        // this.leftShade.arc(this.center.x * 2, this.center.y * 2,
+        //     this.radius - 30, Math.PI / 2, -Math.PI / 2);
+        // this.leftShade.endFill();
+        //
+        // this.rightShade.clear();
+        // this.rightShade.beginFill(0x000000, 0.7);
+        // this.rightShade.arc(this.center.x * 2, this.center.y * 2,
+        //     this.radius - 30, -Math.PI / 2, Math.PI / 2);
+        // this.rightShade.endFill();
 
         if (phase <= 0.5) {
             const scale = 1 - (phase * 4);

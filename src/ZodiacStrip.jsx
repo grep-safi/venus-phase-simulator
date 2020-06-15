@@ -11,7 +11,6 @@ const MAINVIEW_HEIGHT = 460;
 
 const getPlanetPos = function(radius, phase) {
     return new PIXI.Point(
-        // these magic numbers come from this.orbitCenter
         radius * Math.cos(-phase) + MAINVIEW_WIDTH,
         radius * Math.sin(-phase) + MAINVIEW_HEIGHT);
 };
@@ -38,16 +37,12 @@ export default class ZodiacStrip extends React.Component {
 
         this.el.appendChild(this.app.view);
 
-        const me = this;
         const stage = new PIXI.Container();
         this.app.stage.addChild(stage);
 
-        me.leftShade = null;
-        me.targetPlanetZodiacContainer = me.drawTargetPlanetZodiac();
-
-        me.drawShades();
-
-        // me.start();
+        this.targetPlanet = this.drawTargetPlanetZodiac();
+        this.drawShades();
+        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(0));
     }
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) this.animate();
@@ -66,7 +61,6 @@ export default class ZodiacStrip extends React.Component {
         targetPlanetContainer.addChild(targetPlanetImage);
 
         this.app.stage.addChild(targetPlanetContainer);
-        this.app.stage.addChild(this.leftShade);
 
         return targetPlanetContainer;
     }
@@ -122,7 +116,7 @@ export default class ZodiacStrip extends React.Component {
         let distObserverTarget = this.getDistance(observerPos, targetPos);
 
         let targetElongAng = this.getTargetElongAng(distObserverTarget, distTargetSun, distObserverSun);
-        this.drawMoonPhase(distObserverTarget, targetElongAng);
+        this.drawTargetPlanetSize(distObserverTarget, targetElongAng);
 
         this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
     }
@@ -136,7 +130,7 @@ export default class ZodiacStrip extends React.Component {
         if (!ans) ans = 0;
         return ans;
     }
-    drawMoonPhase(separationDistance, targetElongation) {
+    drawTargetPlanetSize(separationDistance, targetElongation) {
         const minPixelSize = 100;
         const maxPixelSize = 275;
 
@@ -146,99 +140,69 @@ export default class ZodiacStrip extends React.Component {
         const linearScale = (input) => maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize);
 
         const targetPlanetSize = linearScale(separationDistance);
-        this.targetPlanetZodiacContainer.width = targetPlanetSize;
-        this.targetPlanetZodiacContainer.height = targetPlanetSize;
+        this.targetPlanet.width = targetPlanetSize;
+        this.targetPlanet.height = targetPlanetSize;
 
-        this.drawShade(targetPlanetSize / 2, targetElongation);
-
-
-
-
-
-
-        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation));
+        // this.drawShades();
+        this.hiddenTargetPlanet.visible = true;
+        // console.log(`target elongation: ${radToDeg(targetElongation)}`);
+        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), targetPlanetSize / 2);
     }
-    drawShade(radius, angle) {
-        this.leftShade.clear();
-        this.leftShade.pivot = new PIXI.Point(0, 0);
-        this.leftShade.beginFill(0x000000);
-        this.leftShade.alpha = 0.7;
-        let shift = -0.5;
-        this.leftShade.arc(
-            // (1 / Math.pow(shift, 2)) * (WIDTH / 2),
-            WIDTH / 2,
-            HEIGHT / 2,
-            radius,
-            -Math.PI / 2,
-            Math.PI / 2);
 
-        this.leftShade.scale.x = shift;
-        this.leftShade.position.x = ((WIDTH / 2) - (shift * (WIDTH / 2)));
-
-
-        let s = 1;
-        // this.targetPlanetZodiacContainer.scale.x = s;
-    }
     animate() {
         this.getElongationAngle();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     drawShades() {
+        const size = 275;
+        const radius = size / 2;
+
         this.leftShade = new PIXI.Graphics();
         this.leftShade.pivot = this.center;
         this.rightShade = new PIXI.Graphics();
         this.rightShade.pivot = this.center;
 
-        this.leftShade.beginFill(0x0000FF, 0.7);
+        this.leftShade.beginFill(0x000000, 0.7);
         this.leftShade.arc(this.center.x * 2, this.center.y * 2,
-            this.radius, Math.PI / 2, -Math.PI / 2);
+            radius, Math.PI / 2, -Math.PI / 2);
         this.leftShade.endFill();
+
         this.app.stage.addChild(this.leftShade);
 
-        this.rightShade.beginFill(0x0000FF, 0.7);
+        this.rightShade.beginFill(0x000000, 0.7);
         this.rightShade.arc(this.center.x * 2, this.center.y * 2,
-            this.radius, -Math.PI / 2, Math.PI / 2);
+            radius, -Math.PI / 2, Math.PI / 2);
         this.rightShade.endFill();
+
         this.app.stage.addChild(this.rightShade);
 
-        // When the moon is a crescent, use the opposite shade to
-        // create a mask, with only the shade part of the moon clearly
-        // visible. So, sometimes there are actually two moons on the
-        // screen, you just can't tell.
-        const hiddenMoon = new PIXI.Sprite( PIXI.Texture.from('img/grey-circle.png') );
-        hiddenMoon.anchor.set(0.5);
-        hiddenMoon.width = 200;
-        hiddenMoon.height = 200;
-        hiddenMoon.visible = false;
-        this.app.stage.addChild(hiddenMoon);
-        this.hiddenMoon = hiddenMoon;
+        const hiddenTargetPlanet = new PIXI.Sprite( PIXI.Texture.from('img/grey-circle.png') );
+        hiddenTargetPlanet.anchor.set(0.5);
+        hiddenTargetPlanet.width = size;
+        hiddenTargetPlanet.height = size;
+        hiddenTargetPlanet.visible = false;
+        hiddenTargetPlanet.position = new PIXI.Point(WIDTH / 2, HEIGHT / 2);
+
+        this.app.stage.addChild(hiddenTargetPlanet);
+        this.hiddenTargetPlanet = hiddenTargetPlanet;
     }
-    drawPhase(leftShade, rightShade, phase) {
+    drawPhase(leftShade, rightShade, phase, radius) {
+
+        this.leftShade.clear();
+        this.leftShade.beginFill(0x000000, 0.7);
+        this.leftShade.arc(this.center.x * 2, this.center.y * 2,
+            radius, Math.PI / 2, -Math.PI / 2);
+        this.leftShade.endFill();
+
+        this.rightShade.clear();
+        this.rightShade.beginFill(0x000000, 0.7);
+        this.rightShade.arc(this.center.x * 2, this.center.y * 2,
+            radius, -Math.PI / 2, Math.PI / 2);
+        this.rightShade.endFill();
+
+        this.hiddenTargetPlanet.width = radius * 2;
+        this.hiddenTargetPlanet.height = radius * 2;
+
         if (phase <= 0.5) {
             const scale = 1 - (phase * 4);
             leftShade.scale.x = 1;
@@ -247,11 +211,11 @@ export default class ZodiacStrip extends React.Component {
             rightShade.position.x = this.center.x - (scale * this.center.x);
 
             if (phase > 0.25) {
-                this.hiddenMoon.mask = this.rightShade;
-                this.hiddenMoon.visible = true;
+                this.hiddenTargetPlanet.mask = this.rightShade;
+                this.hiddenTargetPlanet.visible = true;
             } else {
-                this.hiddenMoon.mask = null;
-                this.hiddenMoon.visible = false;
+                this.hiddenTargetPlanet.mask = null;
+                this.hiddenTargetPlanet.visible = false;
             }
         } else {
             const scale = -phase * 4 + 3;
@@ -260,13 +224,13 @@ export default class ZodiacStrip extends React.Component {
             rightShade.position.x = 0;
 
             if (phase < 0.75) {
-                this.hiddenMoon.mask = this.leftShade;
-                this.hiddenMoon.visible = true;
+                this.hiddenTargetPlanet.mask = this.leftShade;
+                this.hiddenTargetPlanet.visible = true;
                 leftShade.scale.x = -scale;
                 leftShade.position.x = this.center.x - (-scale * this.center.x);
             } else {
-                this.hiddenMoon.mask = null;
-                this.hiddenMoon.visible = false;
+                this.hiddenTargetPlanet.mask = null;
+                this.hiddenTargetPlanet.visible = false;
                 leftShade.scale.x = -scale;
                 leftShade.position.x =  this.center.x - (-scale * this.center.x);
                 rightShade.scale.x = 1;
@@ -274,15 +238,6 @@ export default class ZodiacStrip extends React.Component {
             }
         }
     }
-    /**
-     * Get the moonPhase value that's used by the rest of the system
-     * ready for the moon phase painter.
-     *
-     * moonPhase is offset by pi (its initial value is Math.PI, see
-     * initial state in main.jsx), and also divide it by 2 * pi
-     * because moonPhase is in radians and the moon phase painter
-     * expects the phase to be a number between 0 and 1.
-     */
     convertPhase(moonPhase) {
         const phase = (moonPhase - Math.PI) / (Math.PI * 2);
         if (phase > 1) {
