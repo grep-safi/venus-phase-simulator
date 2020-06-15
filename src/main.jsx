@@ -541,28 +541,28 @@ class PlanetaryConfigSim extends React.Component {
     onPresetSelectTarget(e) {
         let name;
 
-        if (e.target.value == 0) {
+        if (e.target.value === 0) {
             this.onTargetPlanetRadiusChange(2.40);
             name = "target planet";
-        } else if (e.target.value == 1) {
+        } else if (e.target.value === 1) {
             this.onTargetPlanetRadiusChange(0.39);
             name = "target (mercury)";
-        } else if (e.target.value == 2) {
+        } else if (e.target.value === 2) {
             this.onTargetPlanetRadiusChange(0.72);
             name = "target (venus)";
-        } else if (e.target.value == 3) {
+        } else if (e.target.value === 3) {
             this.onTargetPlanetRadiusChange(1.00);
             name = "target (earth)";
-        } else if (e.target.value == 4) {
+        } else if (e.target.value === 4) {
             this.onTargetPlanetRadiusChange(1.52);
             name = "target (mars)";
-        } else if (e.target.value == 5) {
+        } else if (e.target.value === 5) {
             this.onTargetPlanetRadiusChange(5.20);
             name = "target (jupiter)";
-        } else if (e.target.value == 6) {
+        } else if (e.target.value === 6) {
             this.onTargetPlanetRadiusChange(9.54);
             name = "target (saturn)";
-        } else if (e.target.value == 7) {
+        } else if (e.target.value === 7) {
             name = "target planet";
         }
 

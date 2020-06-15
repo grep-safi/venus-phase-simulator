@@ -32,7 +32,10 @@ export default class TargetPlanetPhase extends React.Component {
             width: WIDTH,
             height: HEIGHT,
             backgroundColor: 0x241B23,
+
             antialias: true,
+            resolution: Math.min(window.devicePixelRatio, 3) || 1,
+            autoDensity: true
         });
 
         this.el.appendChild(this.app.view);

@@ -58,6 +58,10 @@ export default class MainView extends React.Component {
             width: ORBIT_CENTER_X * 2,
             height: ORBIT_CENTER_Y * 2,
             backgroundColor: 0x241b23,
+
+            antialias: true,
+            resolution: Math.min(window.devicePixelRatio, 3) || 1,
+            // autoDensity: true,
         });
 
         this.el.appendChild(this.app.view);
@@ -175,7 +179,7 @@ export default class MainView extends React.Component {
         shade.arc(
             0,
             0,
-            20,
+            21,
             startAngle,
             endAngle);
     }
