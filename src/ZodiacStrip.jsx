@@ -70,6 +70,51 @@ export default class ZodiacStrip extends React.Component {
 
         return Math.sqrt(diffX + diffY);
     }
+
+    getTargetAngle() {
+        let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
+        let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
+        let sunPos = new PIXI.Point(0, 0);
+
+        observerPos.x -= MAINVIEW_WIDTH;
+        observerPos.y -= MAINVIEW_HEIGHT;
+        observerPos.y *= -1;
+
+        targetPos.x -= MAINVIEW_WIDTH;
+        targetPos.y -= MAINVIEW_HEIGHT;
+        targetPos.y *= -1;
+
+        let targetPlanetAngle = Math.atan2(observerPos.y - targetPos.y, observerPos.x - targetPos.x);
+        let sunAngle = Math.atan2(sunPos.y - targetPos.y, sunPos.x - targetPos.x);
+
+        let holdSunAng = sunAngle;
+        let holdTargetPlanetAng = targetPlanetAngle;
+
+        if (-Math.PI < sunAngle && sunAngle < 0) {
+            sunAngle += 2 * Math.PI;
+        }
+
+        if (-Math.PI < targetPlanetAngle && targetPlanetAngle < 0) {
+            targetPlanetAngle += 2 * Math.PI;
+        }
+
+        let elongationAngle = targetPlanetAngle - sunAngle;
+
+        if (elongationAngle < 0) {
+            elongationAngle += 2 * Math.PI;
+        }
+
+        let propsElongAngle = elongationAngle;
+
+        if (propsElongAngle > Math.PI) {
+            let temp = propsElongAngle - Math.PI;
+            propsElongAngle -= temp * 2;
+        }
+
+        return elongationAngle;
+        // console.log(`tragedy anglez: ${radToDeg(propsElongAngle)}`);
+    }
+
     getElongationAngle() {
 
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
@@ -115,7 +160,9 @@ export default class ZodiacStrip extends React.Component {
         let distTargetSun = this.props.radiusTargetPlanet;
         let distObserverTarget = this.getDistance(observerPos, targetPos);
 
-        let targetElongAng = this.getTargetElongAng(distObserverTarget, distTargetSun, distObserverSun);
+        let targetElongAng2 = this.getTargetElongAng(distObserverTarget, distTargetSun, distObserverSun);
+        let targetElongAng = this.getTargetAngle();
+        console.log(`this is the difference: ${radToDeg(targetElongAng)} - ${radToDeg(targetElongAng2)} = ${Math.round(radToDeg(targetElongAng - targetElongAng2))}`);
         this.drawTargetPlanetSize(distObserverTarget, targetElongAng);
 
         this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
