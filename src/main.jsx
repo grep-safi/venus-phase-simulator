@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MainView from './MainView';
-import ZodiacStrip from './ZodiacStrip';
+import TargetPlanetPhase from './TargetPlanetPhase';
 import { forceNumber } from './utils';
 
 class PlanetaryConfigSim extends React.Component {
@@ -259,7 +259,7 @@ class PlanetaryConfigSim extends React.Component {
                 </div>
 
                 <div className="zodiacStrip">
-                    <ZodiacStrip
+                    <TargetPlanetPhase
                         speed={this.state.animationRate}
                         observerPlanetAngle={this.state.observerPlanetAngle}
                         targetPlanetAngle={this.state.targetPlanetAngle}
@@ -284,22 +284,6 @@ class PlanetaryConfigSim extends React.Component {
         let earthDaysElapsed = ((orbitYears * orbitalPeriod) + orbitDays);
 
         return earthDaysElapsed;
-
-        // if (this.state.days === 0) {
-        //     return 0;
-        // }
-
-
-        // let daysElapsed;
-        // if (this.state.cyclesCompleted <= 0) {
-        //     daysElapsed = this.state.days - orbitalPeriod;
-        //     daysElapsed += this.getYear() * orbitalPeriod;
-        //     return daysElapsed % 365;
-        // }
-
-        // daysElapsed = this.state.days;
-        // daysElapsed += this.getYear() * orbitalPeriod;
-        // return daysElapsed % 365;
     }
 
     getEarthYearsElapsed() {
@@ -333,7 +317,6 @@ class PlanetaryConfigSim extends React.Component {
         }
 
         return year - 1;
-        // return year < 0 ? (year) : (year - 1 === -1 ? 0 : year - 1);
     }
 
     resetDaysElapsed() {
@@ -449,34 +432,34 @@ class PlanetaryConfigSim extends React.Component {
 
     onObserverPlanetAngleUpdate(newAngle) {
         this.stopAnimation();
-        let diff;
+        // let diff;
         let newAng = newAngle;
         let prevObserverPlanetAng = this.state.observerPlanetAngle;
-
-        let ninetyDegrees = Math.PI / 2;
-        if (newAng >= ninetyDegrees && prevObserverPlanetAng <= -ninetyDegrees) {
-            diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevObserverPlanetAng));
-        } else if (newAng <= -ninetyDegrees && prevObserverPlanetAng >= ninetyDegrees) {
-            diff = (Math.abs(prevObserverPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
-        } else {
-            diff = newAng - prevObserverPlanetAng;
-        }
-
-        this.updateMultiplier();
-        diff *= this.state.targetMultiplier / this.state.observerMultiplier;
-        let newTargetPlanet = (this.state.targetPlanetAngle + diff);
-
-        if (newTargetPlanet >= Math.PI) {
-            newTargetPlanet = -2 * ninetyDegrees;
-        } else if (newTargetPlanet <= -Math.PI) {
-            newTargetPlanet = 2 * ninetyDegrees;
-        }
+        //
+        // let ninetyDegrees = Math.PI / 2;
+        // if (newAng >= ninetyDegrees && prevObserverPlanetAng <= -ninetyDegrees) {
+        //     diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevObserverPlanetAng));
+        // } else if (newAng <= -ninetyDegrees && prevObserverPlanetAng >= ninetyDegrees) {
+        //     diff = (Math.abs(prevObserverPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
+        // } else {
+        //     diff = newAng - prevObserverPlanetAng;
+        // }
+        //
+        // this.updateMultiplier();
+        // diff *= this.state.targetMultiplier / this.state.observerMultiplier;
+        // let newTargetPlanet = (this.state.targetPlanetAngle + diff);
+        //
+        // if (newTargetPlanet >= Math.PI) {
+        //     newTargetPlanet = -2 * ninetyDegrees;
+        // } else if (newTargetPlanet <= -Math.PI) {
+        //     newTargetPlanet = 2 * ninetyDegrees;
+        // }
 
         this.updateCycles(prevObserverPlanetAng, newAng);
         this.setState({
             isPlaying: false,
             observerPlanetAngle: newAngle,
-            targetPlanetAngle: newTargetPlanet,
+            // targetPlanetAngle: newTargetPlanet,
             days: this.incrementDays()
         });
         // console.log(`new obs angle: ${this.state.observerPlanetAngle * 180 / Math.PI}, new target angle: ${this.state.targetPlanetAngle * 180 / Math.PI}`);
@@ -484,33 +467,33 @@ class PlanetaryConfigSim extends React.Component {
 
     onTargetPlanetAngleUpdate(newAngle) {
         this.stopAnimation();
-        let diff;
+        // let diff;
         let newAng = newAngle;
         let prevTargetPlanetAng = this.state.targetPlanetAngle;
 
-        let ninetyDegrees = Math.PI / 2;
-        if (newAng >= ninetyDegrees && prevTargetPlanetAng <= -ninetyDegrees) {
-            diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevTargetPlanetAng));
-        } else if (newAng <= -ninetyDegrees && prevTargetPlanetAng >= ninetyDegrees) {
-            diff = (Math.abs(prevTargetPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
-        } else {
-            diff = newAng - prevTargetPlanetAng;
-        }
+        // let ninetyDegrees = Math.PI / 2;
+        // if (newAng >= ninetyDegrees && prevTargetPlanetAng <= -ninetyDegrees) {
+        //     diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevTargetPlanetAng));
+        // } else if (newAng <= -ninetyDegrees && prevTargetPlanetAng >= ninetyDegrees) {
+        //     diff = (Math.abs(prevTargetPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
+        // } else {
+        //     diff = newAng - prevTargetPlanetAng;
+        // }
+        //
+        // this.updateMultiplier();
+        // diff *= this.state.observerMultiplier / this.state.targetMultiplier;
+        // let newObserverPlanet = (this.state.observerPlanetAngle + diff);
+        // if (newObserverPlanet >= Math.PI) {
+        //     newObserverPlanet = -2 * ninetyDegrees;
+        // } else if (newObserverPlanet <= -Math.PI) {
+        //     newObserverPlanet = 2 * ninetyDegrees;
+        // }
 
-        this.updateMultiplier();
-        diff *= this.state.observerMultiplier / this.state.targetMultiplier;
-        let newObserverPlanet = (this.state.observerPlanetAngle + diff);
-        if (newObserverPlanet >= Math.PI) {
-            newObserverPlanet = -2 * ninetyDegrees;
-        } else if (newObserverPlanet <= -Math.PI) {
-            newObserverPlanet = 2 * ninetyDegrees;
-        }
-
-        this.updateCycles(this.state.observerPlanetAngle, newObserverPlanet);
+        // this.updateCycles(this.state.observerPlanetAngle, newObserverPlanet);
         this.setState({
             isPlaying: false,
             targetPlanetAngle: newAngle,
-            observerPlanetAngle: newObserverPlanet,
+            // observerPlanetAngle: newObserverPlanet,
             days: this.incrementDays()
         });
     }

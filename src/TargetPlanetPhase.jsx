@@ -15,7 +15,7 @@ const getPlanetPos = function(radius, phase) {
         radius * Math.sin(-phase) + MAINVIEW_HEIGHT);
 };
 
-export default class ZodiacStrip extends React.Component {
+export default class TargetPlanetPhase extends React.Component {
     constructor(props) {
         super(props);
 
@@ -303,8 +303,8 @@ export default class ZodiacStrip extends React.Component {
 }
 
 // These are all the parameters that MUST be passed
-// Into ZodiacStrip by main.jsx
-ZodiacStrip.propTypes = {
+// Into TargetPlanetPhase by main.jsx
+TargetPlanetPhase.propTypes = {
     radiusObserverPlanet: PropTypes.number.isRequired,
     observerPlanetAngle: PropTypes.number.isRequired,
     radiusTargetPlanet: PropTypes.number.isRequired,
