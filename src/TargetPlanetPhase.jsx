@@ -21,12 +21,14 @@ export default class TargetPlanetPhase extends React.Component {
 
         this.center = new PIXI.Point(WIDTH / 2, HEIGHT / 2);
     }
+
     render() {
         return (
             <div className="ZodiacStrip"
                  ref={(thisDiv) => {this.el = thisDiv;}} />
         );
     }
+
     componentDidMount() {
         this.app = new PIXI.Application({
             width: WIDTH,
@@ -45,12 +47,45 @@ export default class TargetPlanetPhase extends React.Component {
 
         this.targetPlanet = this.drawTargetPlanetZodiac();
         this.drawShades();
+        this.elongationText = this.drawText('Elongation: 180', 15, 10);
+        this.distanceText = this.drawText(`observer-target distance: \n${this.getDistanceBetweenBodies()} au`, 390, 10);
         this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(Math.PI), 1.002 * (275 / 2));
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) this.animate();
     }
+
+    getDistanceBetweenBodies() {
+        const firstRad = this.props.radiusAUObserver;
+        const secondRad = this.props.radiusAUTarget;
+
+        const firstAng = this.props.observerPlanetAngle;
+        const secondAng = this.props.targetPlanetAngle;
+
+        console.log(`firstRad: ${firstRad} and ${secondRad}`);
+
+        const firstBody = new PIXI.Point(firstRad * Math.cos(-firstAng), firstRad * Math.sin(-firstAng));
+        const secondBody = new PIXI.Point(secondRad * Math.cos(-secondAng), secondRad * Math.sin(-secondAng));
+
+        return this.getDistance(firstBody, secondBody);
+    }
+
+    drawText(name, x, y) {
+        const text = new PIXI.Text(name, {
+            fontFamily: 'Garamond',
+            fontSize: 20,
+            fill: 0x99c9ac,
+            align: 'center'
+        });
+
+        text.position.x = x;
+        text.position.y = y;
+        this.app.stage.addChild(text);
+
+        return text;
+    }
+
     drawTargetPlanetZodiac() {
         const size = 275;
 
@@ -68,6 +103,7 @@ export default class TargetPlanetPhase extends React.Component {
 
         return targetPlanetContainer;
     }
+
     getDistance(firstBody, secondBody) {
         let diffX = Math.pow((firstBody.x - secondBody.x), 2);
         let diffY = Math.pow((firstBody.y - secondBody.y), 2);
@@ -105,30 +141,9 @@ export default class TargetPlanetPhase extends React.Component {
             elongationAngle += 2 * Math.PI;
         }
 
+        this.updateTexts(elongationAngle);
         return elongationAngle;
     }
-
-    // getRelativeAngle(mainBody, firstBody, secondBody) {
-    //     let firstBodyAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
-    //     let secondBodyAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
-    //
-    //     let holdSunAng = sunAngle;
-    //     let holdTargetPlanetAng = targetPlanetAngle;
-    //
-    //     if (-Math.PI < sunAngle && sunAngle < 0) {
-    //         sunAngle += 2 * Math.PI;
-    //     }
-    //
-    //     if (-Math.PI < targetPlanetAngle && targetPlanetAngle < 0) {
-    //         targetPlanetAngle += 2 * Math.PI;
-    //     }
-    //
-    //     let elongationAngle = targetPlanetAngle - sunAngle;
-    //
-    //     if (elongationAngle < 0) {
-    //         elongationAngle += 2 * Math.PI;
-    //     }
-    // }
 
     getElongationAngle() {
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
@@ -201,6 +216,29 @@ export default class TargetPlanetPhase extends React.Component {
 
     animate() {
         this.getElongationAngle();
+        this.updateTexts();
+    }
+
+    updateTexts(elongationAngle) {
+        this.distanceText.text = `observer-target distance:\n${Math.round(this.getDistanceBetweenBodies() * 100) / 100} au`;
+
+        let num = elongationAngle * 180 / Math.PI;
+
+        let direction = 'E';
+        if (num > 180) {
+            let temp = num - 180;
+            num -= temp * 2;
+            direction = 'W ';
+        }
+
+        if (num === 0 || num === 180) {
+            direction = '';
+        }
+
+        let textNum = String(" " + num.toFixed(0)).slice(-6);
+        textNum += '°';
+
+        this.elongationText.text = `Elongation: ${textNum}`;
     }
 
     drawShades() {
@@ -288,6 +326,7 @@ export default class TargetPlanetPhase extends React.Component {
             }
         }
     }
+
     convertPhase(moonPhase) {
         const phase = (moonPhase - Math.PI) / (Math.PI * 2);
         if (phase > 1) {

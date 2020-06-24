@@ -73,8 +73,10 @@ class PlanetaryConfigSim extends React.Component {
                     <MainView
                         targetPlanetAngle={this.state.targetPlanetAngle}
                         observerPlanetAngle={this.state.observerPlanetAngle}
+
                         radiusTargetPlanet={this.state.radiusPixelTarget}
                         radiusObserverPlanet={this.state.radiusPixelObserver}
+
                         onTargetPlanetAngleUpdate={this.onTargetPlanetAngleUpdate.bind(this)}
                         onObserverPlanetAngleUpdate={this.onObserverPlanetAngleUpdate.bind(this)}
                         stopAnimation={this.stopAnimation}
@@ -263,6 +265,10 @@ class PlanetaryConfigSim extends React.Component {
                         speed={this.state.animationRate}
                         observerPlanetAngle={this.state.observerPlanetAngle}
                         targetPlanetAngle={this.state.targetPlanetAngle}
+
+                        radiusAUTarget={this.state.radiusTargetPlanet}
+                        radiusAUObserver={this.state.radiusObserverPlanet}
+
                         radiusObserverPlanet={this.state.radiusPixelObserver}
                         radiusTargetPlanet={this.state.radiusPixelTarget}
                         isPlaying={this.state.isPlaying}
@@ -749,10 +755,7 @@ class PlanetaryConfigSim extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        // console.log(`rad observer: ${this.state.radiusObserverPlanet}, rad target: ${this.state.radiusTargetPlanet},
-        // rad pix observer: ${this.state.radiusPixelObserver}, rad pix target: ${this.state.radiusPixelTarget}`<!--);-->
 
-        console.log(`this.state: ${JSON.stringify(this.state)}`);
     }
 }
 
