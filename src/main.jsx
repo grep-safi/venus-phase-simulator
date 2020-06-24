@@ -505,26 +505,28 @@ class PlanetaryConfigSim extends React.Component {
     }
 
     onPresetSelectObserver(e) {
+        const chosenOption = parseInt(e.target.value);
+
         let name;
-        if (e.target.value == 0) {
+        if (chosenOption === 0) {
             this.onObserverPlanetRadiusChange(1.00);
             name = "observer planet";
-        } else if (e.target.value == 1) {
+        } else if (chosenOption === 1) {
             this.onObserverPlanetRadiusChange(0.39);
             name = "observer (mercury)";
-        } else if (e.target.value == 2) {
+        } else if (chosenOption === 2) {
             this.onObserverPlanetRadiusChange(0.72);
             name = "observer (venus)";
-        } else if (e.target.value == 3) {
+        } else if (chosenOption === 3) {
             this.onObserverPlanetRadiusChange(1.00);
             name = "observer (earth)";
-        } else if (e.target.value == 4) {
+        } else if (chosenOption === 4) {
             this.onObserverPlanetRadiusChange(1.52);
             name = "observer (mars)";
-        } else if (e.target.value == 5) {
+        } else if (chosenOption === 5) {
             this.onObserverPlanetRadiusChange(5.20);
             name = "observer (jupiter)";
-        } else if (e.target.value == 6) {
+        } else if (chosenOption === 6) {
             this.onObserverPlanetRadiusChange(9.54);
             name = "observer (saturn)";
         } else {
@@ -539,30 +541,31 @@ class PlanetaryConfigSim extends React.Component {
     }
 
     onPresetSelectTarget(e) {
+        const chosenOption = parseInt(e.target.value);
         let name;
 
-        if (e.target.value === 0) {
+        if (chosenOption === 0) {
             this.onTargetPlanetRadiusChange(2.40);
             name = "target planet";
-        } else if (e.target.value === 1) {
+        } else if (chosenOption === 1) {
             this.onTargetPlanetRadiusChange(0.39);
             name = "target (mercury)";
-        } else if (e.target.value === 2) {
+        } else if (chosenOption === 2) {
             this.onTargetPlanetRadiusChange(0.72);
             name = "target (venus)";
-        } else if (e.target.value === 3) {
+        } else if (chosenOption === 3) {
             this.onTargetPlanetRadiusChange(1.00);
             name = "target (earth)";
-        } else if (e.target.value === 4) {
+        } else if (chosenOption === 4) {
             this.onTargetPlanetRadiusChange(1.52);
             name = "target (mars)";
-        } else if (e.target.value === 5) {
+        } else if (chosenOption === 5) {
             this.onTargetPlanetRadiusChange(5.20);
             name = "target (jupiter)";
-        } else if (e.target.value === 6) {
+        } else if (chosenOption === 6) {
             this.onTargetPlanetRadiusChange(9.54);
             name = "target (saturn)";
-        } else if (e.target.value === 7) {
+        } else {
             name = "target planet";
         }
 
