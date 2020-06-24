@@ -12,22 +12,22 @@ class PlanetaryConfigSim extends React.Component {
             observerPlanetAngle: 0,
             targetPlanetAngle: 0,
             radiusObserverPlanet: 1.00,
-            radiusTargetPlanet: 2.40,
-            radiusPixelObserver: 166.66,
-            radiusPixelTarget: 400,
+            radiusTargetPlanet: 0.72,
+            radiusPixelObserver: 400,
+            radiusPixelTarget: 288,
             maximumPixelRadius: 400,
             observerMultiplier: Math.pow(1.0, -1.5),
-            targetMultiplier:  Math.pow(2.4, -1.5),
+            targetMultiplier:  Math.pow(0.72, -1.5),
             animationRate: 1.5,
-            targetAngle: 0,
-            sunAngle: -Math.PI,
-            elongationAngle: -Math.PI,
-            optionObserver: 0,
-            optionTarget: 0,
-            observerName: 'observer planet',
-            targetName: 'target planet',
+            targetAngle: Math.PI,
+            sunAngle: Math.PI,
+            elongationAngle: 0,
+            optionObserver: "3",
+            optionTarget: "2",
+            observerName: 'observer (earth)',
+            targetName: 'target (venus)',
             holdObserver: 1.00,
-            holdTarget: 2.40,
+            holdTarget: 0.72,
             labelOrbits: true,
             showElongation: false,
             zoomOut: false,
@@ -675,20 +675,6 @@ class PlanetaryConfigSim extends React.Component {
         });
     }
 
-    displayZoomOut(e) {
-        let newRad = 400;
-        if (!this.state.zoomOut) {
-            newRad = 175;
-        }
-
-        this.setState({
-            zoomOut: !this.state.zoomOut,
-            maximumPixelRadius: newRad,
-        });
-
-        this.onTargetPlanetRadiusChange(this.state.radiusTargetPlanet, newRad);
-    }
-
     stopAnimation() {
         cancelAnimationFrame(this.raf);
     }
@@ -747,6 +733,13 @@ class PlanetaryConfigSim extends React.Component {
         // }
 
         this.setState({holdTarget: enteredValue});
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // console.log(`rad observer: ${this.state.radiusObserverPlanet}, rad target: ${this.state.radiusTargetPlanet},
+        // rad pix observer: ${this.state.radiusPixelObserver}, rad pix target: ${this.state.radiusPixelTarget}`<!--);-->
+
+        console.log(`this.state: ${JSON.stringify(this.state)}`);
     }
 }
 

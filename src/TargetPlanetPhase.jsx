@@ -192,7 +192,8 @@ export default class TargetPlanetPhase extends React.Component {
         this.targetPlanet.height = targetPlanetSize;
 
         this.hiddenTargetPlanet.visible = true;
-        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), 1.0025 * (targetPlanetSize / 2));
+        // this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), 1.0025 * (targetPlanetSize / 2));
+        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), 1.002 * (targetPlanetSize / 2));
     }
 
     animate() {
