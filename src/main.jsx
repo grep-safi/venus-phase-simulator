@@ -29,18 +29,13 @@ class PlanetaryConfigSim extends React.Component {
             holdObserver: 1.00,
             holdTarget: 0.72,
             labelOrbits: true,
-
-
-            showElongation: true,
-
-
+            showElongation: false,
             zoomOut: false,
             startBtnText: 'Play animation',
             isPlaying: false,
             days: 0,
             thetaShift: 0,
             cyclesCompleted: 0,
-
 
             obsAngleTarget: 0,
             sunAngleTarget: Math.PI,
@@ -55,7 +50,7 @@ class PlanetaryConfigSim extends React.Component {
     render() {
         return <React.Fragment>
             <nav className="navbar navbar-expand-md navbar-light bg-dark d-flex justify-content-between">
-                <span className="navbar-brand mb-0 text-light h1">Planetary Configurations Simulator</span>
+                <span className="navbar-brand mb-0 text-light h1">Copernican Planetary Phases</span>
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <a className="nav-link text-light" href="#" onClick={this.onResetClick.bind(this)}>Reset</a>
@@ -251,7 +246,7 @@ class PlanetaryConfigSim extends React.Component {
                     </div>
 
                     <div id="survey">
-                        <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=n7L3RQCxQUyAT7NBighZStjAWTIFlutChq8ZZEGLLMdUNTJOMEw5TkRPWUExTUREQzRLR0FDV0FBVi4u"
+                        <a href="https://tinyurl.com/y7og92oe"
                            target="_blank"
                            rel="noopener noreferrer">
                             <button type="button" className="btn btn-warning">Give us feedback!</button>
