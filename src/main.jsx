@@ -39,7 +39,11 @@ class PlanetaryConfigSim extends React.Component {
             isPlaying: false,
             days: 0,
             thetaShift: 0,
-            cyclesCompleted: 0
+            cyclesCompleted: 0,
+
+
+            obsAngleTarget: 0,
+            sunAngleTarget: Math.PI,
         };
 
         this.state = this.initialState;
@@ -82,6 +86,9 @@ class PlanetaryConfigSim extends React.Component {
                         labelOrbits={this.state.labelOrbits}
                         showElongation={this.state.showElongation}
                         zoomOut={this.state.zoomOut}
+
+                        obsAngleTarget={this.state.obsAngleTarget}
+                        sunAngleTarget={this.state.sunAngleTarget}
                     />
                 </div>
                 <div className="rowx">
@@ -403,12 +410,14 @@ class PlanetaryConfigSim extends React.Component {
         }
     }
 
-    updateAngles(targetAng, sunAng, elongationAng) {
+    updateAngles(targetAng, sunAng, elongationAng, obsAngT, sunAngT) {
         if (this.state.elongationAngle !== elongationAng) {
             this.setState({
                 targetAngle: targetAng,
                 sunAngle: sunAng,
-                elongationAngle: elongationAng
+                elongationAngle: elongationAng,
+                obsAngleTarget: obsAngT,
+                sunAngleTarget: sunAngT,
             });
         }
     }

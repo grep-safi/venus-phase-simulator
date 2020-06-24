@@ -131,7 +131,6 @@ export default class TargetPlanetPhase extends React.Component {
     // }
 
     getElongationAngle() {
-
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
         let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
         let sunPos = new PIXI.Point(0, 0);
@@ -146,6 +145,10 @@ export default class TargetPlanetPhase extends React.Component {
 
         let targetPlanetAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
         let sunAngle = Math.atan2(sunPos.y - observerPos.y, sunPos.x - observerPos.x);
+
+        // Temporarty angles that are relative to the targetPlanet instead:
+        let obsAngT = Math.atan2(observerPos.y - targetPos.y, observerPos.x - targetPos.x);
+        let sunAngT = Math.atan2(sunPos.y - targetPos.y, sunPos.x - targetPos.x);
 
         let holdSunAng = sunAngle;
         let holdTargetPlanetAng = targetPlanetAngle;
@@ -176,7 +179,7 @@ export default class TargetPlanetPhase extends React.Component {
         let targetElongAng = this.getTargetAngle();
         this.drawTargetPlanetSize(distObserverTarget, targetElongAng);
 
-        this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle);
+        this.props.updateAngles(holdSunAng, holdTargetPlanetAng, propsElongAngle, obsAngT, sunAngT);
     }
 
     drawTargetPlanetSize(separationDistance, targetElongation) {

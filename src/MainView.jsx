@@ -251,15 +251,16 @@ export default class MainView extends React.Component {
             return;
         }
 
+        let focusedBody = this.targetPlanetContainer;
         this.elongationArc.lineStyle(3.5, 0xa64e4e);
-        this.elongationArc.moveTo(this.observerPlanetContainer.x, this.observerPlanetContainer.y);
+        this.elongationArc.moveTo(focusedBody.x, focusedBody.y);
         let east = this.greaterThan180();
         this.elongationArc.arc(
-            this.observerPlanetContainer.x,
-            this.observerPlanetContainer.y,
+            focusedBody.x,
+            focusedBody.y,
             80,
-            -this.props.targetAngle,
-            -this.props.sunAngle,
+            -this.props.obsAngleTarget,
+            -this.props.sunAngleTarget,
             east
         );
 
@@ -267,7 +268,7 @@ export default class MainView extends React.Component {
     }
 
     updateArcArrow(east) {
-        if (!east) {
+        if (east) {
             this.halfArrow(-0.09, -10.2, 149);
             this.halfArrow(-0.09, 10.2, 172);
         } else {
@@ -279,8 +280,8 @@ export default class MainView extends React.Component {
     halfArrow(angleShift, angleReverse, rad) {
         this.elongationArc.lineStyle(3.5, 0xa64e4e);
         let smt = getPlanetPos(
-            this.props.radiusObserverPlanet,
-            this.props.observerPlanetAngle
+            this.props.radiusTargetPlanet,
+            this.props.targetPlanetAngle
         );
 
         let startX = smt.x;
@@ -302,28 +303,29 @@ export default class MainView extends React.Component {
 
     closerY(angleShift, rad) {
         let smt = getPlanetPos(
-            this.props.radiusTargetPlanet,
-            this.props.targetPlanetAngle
+            this.props.radiusObserverPlanet,
+            this.props.observerPlanetAngle
         );
 
-        let angle = Math.atan2(smt.y - this.observerPlanetContainer.y, smt.x - this.observerPlanetContainer.x) + angleShift;
+        let focusedBody = this.targetPlanetContainer;
+        let angle = Math.atan2(smt.y - focusedBody.y, smt.x - focusedBody.x) + angleShift;
 
         let radius = rad;
         let y = radius * Math.sin(angle);
         let x = radius * Math.cos(angle);
 
-        return new PIXI.Point(this.observerPlanetContainer.x + x, this.observerPlanetContainer.y + y);
+        return new PIXI.Point(focusedBody.x + x, focusedBody.y + y);
     }
 
     greaterThan180() {
-        let sunAng = this.props.sunAngle;
-        let targetAng = this.props.targetAngle;
+        let sunAng = this.props.sunAngleTarget;
+        let targetAng = this.props.obsAngleTarget;
 
-        if (-Math.PI < this.props.sunAngle && this.props.sunAngle < 0) {
+        if (-Math.PI < this.props.sunAngleTarget && this.props.sunAngleTarget < 0) {
             sunAng += 2 * Math.PI;
         }
 
-        if (-Math.PI < this.props.targetAngle && this.props.targetAngle < 0) {
+        if (-Math.PI < this.props.obsAngleTarget && this.props.obsAngleTarget < 0) {
             targetAng += 2 * Math.PI;
         }
 
@@ -427,8 +429,9 @@ export default class MainView extends React.Component {
     }
 
     drawArrow(line, point, angleShift) {
+        let focusedBody = this.targetPlanetContainer;
         line.lineStyle(3.5, 0xa64e4e);
-        let tip = new PIXI.Point(point.x - this.observerPlanetContainer.x, this.observerPlanetContainer.y - point.y);
+        let tip = new PIXI.Point(point.x - focusedBody.x, focusedBody.y - point.y);
 
         let angle = Math.atan2(tip.y, tip.x);
         let length = 25;
@@ -443,8 +446,8 @@ export default class MainView extends React.Component {
         let halfX = tip.x + xDiff;
         let halfY = tip.y + yDiff;
 
-        halfX = halfX + this.observerPlanetContainer.x;
-        halfY = this.observerPlanetContainer.y - halfY;
+        halfX = halfX + focusedBody.x;
+        halfY = focusedBody.y - halfY;
 
         line.moveTo(point.x, point.y);
         line.lineTo(halfX, halfY);
