@@ -218,17 +218,6 @@ class PlanetaryConfigSim extends React.Component {
                                 Show Elongation Angle
                             </label>
                         </div>
-
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox"
-                                   onChange={this.displayZoomOut.bind(this)}
-                                   checked={this.state.zoomOut}
-                                   id="zoom-out-display"
-                            />
-                            <label className="" htmlFor="zoom-out-display" id="text">
-                                Zoom Out to View Constellations
-                            </label>
-                        </div>
                     </div>
 
                     <div id="days">

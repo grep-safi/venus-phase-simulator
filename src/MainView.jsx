@@ -39,10 +39,6 @@ export default class MainView extends React.Component {
 
         this.onObserverPlanetMove = this.onObserverPlanetMove.bind(this);
         this.onTargetPlanetMove = this.onTargetPlanetMove.bind(this);
-        this.onConstellationMove = this.onConstellationMove.bind(this);
-
-        this.constellationsText = [];
-        this.constellations = [];
     }
 
     render() {
@@ -95,21 +91,6 @@ export default class MainView extends React.Component {
             me.observerPlanetName = me.drawText (this.props.observerName, me.props.radiusObserverPlanet, false);
             me.targetPlanetName = me.drawText (this.props.targetName, me.props.radiusTargetPlanet, true);
 
-            // Creating all the constellation sprites and placing them inside the
-            // constellations array
-            me.constellations.push(me.drawConstellation(0, 'img/pisces.png', 'Pisces'));
-            me.constellations.push(me.drawConstellation(Math.PI / 6, 'img/aries.png', 'Aries'));
-            me.constellations.push(me.drawConstellation(Math.PI / 3, 'img/taurus.png', 'Taurus'));
-            me.constellations.push(me.drawConstellation(Math.PI / 2, 'img/gemini.png', 'Gemini'));
-            me.constellations.push(me.drawConstellation(2 * Math.PI / 3, 'img/cancer.png', 'Cancer'));
-            me.constellations.push(me.drawConstellation(5 * Math.PI / 6, 'img/leo.png', 'Leo'));
-            me.constellations.push(me.drawConstellation(Math.PI, 'img/virgo.png', 'Virgo'));
-            me.constellations.push(me.drawConstellation(7 * Math.PI / 6, 'img/libra.png', 'Libra'));
-            me.constellations.push(me.drawConstellation(4 * Math.PI / 3, 'img/scorpio.png', 'Scorpio'));
-            me.constellations.push(me.drawConstellation(3 * Math.PI / 2, 'img/sagittarius.png', 'Sagittarius'));
-            me.constellations.push(me.drawConstellation(5 * Math.PI / 3, 'img/capricorn.png', 'Capricorn'));
-            me.constellations.push(me.drawConstellation(11 * Math.PI / 6, 'img/aquarius.png', 'Aquarius'));
-
             me.start();
         });
     }
@@ -146,7 +127,6 @@ export default class MainView extends React.Component {
 
         this.updateArrows();
         this.updateArc();
-        this.updateConstellation();
         this.updateShade(this.observerPlanetShade, this.props.observerPlanetAngle);
         this.updateShade(this.targetPlanetShade, this.props.targetPlanetAngle);
 
@@ -667,47 +647,6 @@ export default class MainView extends React.Component {
         return sunContainer;
     }
 
-    drawConstellation(angle, img, name) {
-        const constellation = new PIXI.Sprite(PIXI.Texture.from(img));
-        constellation.name = name;
-        constellation.interactive = true;
-        constellation.width = 50 * 2;
-        constellation.height = 40 * 2;
-        constellation.alpha = 0.64;  // opacity
-        constellation.anchor.set(0.5);
-        constellation.visible = false;
-
-        // Triggers events that display name of constellation
-        constellation.on('mousemove', this.onConstellationMove);
-        constellation.on('touchmove', this.onConstellationMove);
-
-        this.app.stage.addChild(constellation);
-
-        const constellationName = new PIXI.Text(name, {
-            align: 'center',
-            fontSize: 36,
-            fontFamily: 'Garamond',
-            fill: 0xffd700,
-        });
-
-        constellationName.visible = false;
-        constellationName.resolution = 2;
-        constellationName.anchor.set(0.5);
-        constellation.position = getPlanetPos(420, angle);
-        constellationName.position = getPlanetPos(320, angle);
-        this.constellationsText.push(constellationName);
-
-        this.app.stage.addChild(constellationName);
-
-        return constellation;
-    }
-
-    updateConstellation() {
-        for (let index = 0; index < this.constellations.length; index++) {
-            this.constellations[index].visible = this.props.zoomOut;
-        }
-    }
-
     onDragStart(event) {
         this.props.stopAnimation();
 
@@ -772,26 +711,6 @@ export default class MainView extends React.Component {
                                   newPosition.x - this.orbitCenter.x);
 
             this.props.onTargetPlanetAngleUpdate(vAngle);
-        }
-    }
-
-    onConstellationMove(e) {
-        if (e.target && !this.state.isHoveringOnConstellation) {
-            for (let index = 0; index < this.constellationsText.length; index++) {
-                let constellation = this.constellations[index];
-                if (e.target.name === constellation.name) {
-                    this.constellationsText[index].visible = true;
-                    this.setState({isHoveringOnConstellation: true});
-                    break;
-                }
-            }
-        }
-
-        if (!e.target && this.state.isHoveringOnConstellation) {
-            this.setState({isHoveringOnConstellation: false});
-            for (let index = 0; index < this.constellationsText.length; index++) {
-                this.constellationsText[index].visible = false;
-            }
         }
     }
 }
