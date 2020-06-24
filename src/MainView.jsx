@@ -354,13 +354,10 @@ export default class MainView extends React.Component {
     }
 
     updateArrows() {
-
         let arrowRadius = 450;
+        // let arrowRadius = 500;
         let zoomArrowRad = 50;
-        if (this.props.zoomOut) {
-            arrowRadius = 250;
-            zoomArrowRad = 75;
-        }
+
         this.arrowToSun.clear();
         this.arrowToTarget.clear();
 
@@ -368,15 +365,26 @@ export default class MainView extends React.Component {
             return;
         }
 
+        // this.arrowToTarget.moveTo(
+        //     this.observerPlanetContainer.x,
+        //     this.observerPlanetContainer.y
+        // );
+        //
+        // this.arrowToSun.moveTo(
+        //     this.observerPlanetContainer.x,
+        //     this.observerPlanetContainer.y
+        // );
+
         this.arrowToTarget.moveTo(
-            this.observerPlanetContainer.x,
-            this.observerPlanetContainer.y
+            this.targetPlanetContainer.x,
+            this.targetPlanetContainer.y
         );
 
         this.arrowToSun.moveTo(
-            this.observerPlanetContainer.x,
-            this.observerPlanetContainer.y
+            this.targetPlanetContainer.x,
+            this.targetPlanetContainer.y
         );
+
 
         this.arrowToTarget.visible = true;
         this.arrowToTarget.lineStyle(3.5, 0xa64e4e);
@@ -388,11 +396,19 @@ export default class MainView extends React.Component {
 
         this.arrowToTarget.lineTo(throughTarget.x, throughTarget.y);
 
+        // let throughSun = this.arrowThroughBody (
+        //     this.sun.x,
+        //     this.sun.y,
+        //     this.observerPlanetContainer.x,
+        //     this.observerPlanetContainer.y,
+        //     arrowRadius
+        // );
+
         let throughSun = this.arrowThroughBody (
             this.sun.x,
             this.sun.y,
-            this.observerPlanetContainer.x,
-            this.observerPlanetContainer.y,
+            this.targetPlanetContainer.x,
+            this.targetPlanetContainer.y,
             arrowRadius
         );
 
@@ -421,8 +437,8 @@ export default class MainView extends React.Component {
 
         let shift = cv + angleShift;
 
-        let xDiff = length * Math.cos(this.convertBack(shift));
-        let yDiff = length * Math.sin(this.convertBack(shift));
+        let xDiff = length * Math.cos(this.degToRad(shift));
+        let yDiff = length * Math.sin(this.degToRad(shift));
 
         let halfX = tip.x + xDiff;
         let halfY = tip.y + yDiff;
@@ -444,17 +460,40 @@ export default class MainView extends React.Component {
         return ((angle * 180 / Math.PI) + 180) % 360;
     }
 
-    convertBack(ang) {
+    degToRad(ang) {
         return ang * Math.PI / 180;
     }
 
     getThroughTarget(arrowRadius, zoomedArrowRadius) {
-        let radTarget = this.props.radiusTargetPlanet;
-        let radObs = this.props.radiusObserverPlanet;
-        let Xe = this.observerPlanetContainer.x;
-        let Ye = this.observerPlanetContainer.y;
-        let Xt = this.targetPlanetContainer.x;
-        let Yt = this.targetPlanetContainer.y;
+
+        // let radTarget = this.props.radiusTargetPlanet;
+        // let radObs = this.props.radiusObserverPlanet;
+        //
+        // let Xe = this.observerPlanetContainer.x;
+        // let Ye = this.observerPlanetContainer.y;
+        //
+        // let Xt = this.targetPlanetContainer.x;
+        // let Yt = this.targetPlanetContainer.y;
+
+        let radTarget = this.props.radiusObserverPlanet;
+        let radObs = this.props.radiusTargetPlanet;
+
+        let Xe = this.targetPlanetContainer.x;
+        let Ye = this.targetPlanetContainer.y;
+
+        let Xt = this.observerPlanetContainer.x;
+        let Yt = this.observerPlanetContainer.y;
+
+        // if (radTarget > radObs) {
+        //     return this.arrowThroughBody (
+        //         Xt,
+        //         Yt,
+        //         Xe,
+        //         Ye,
+        //         zoomedArrowRadius
+        //     );
+        // }
+
         if (radTarget > radObs) {
             return this.arrowThroughBody (
                 Xt,
@@ -464,6 +503,7 @@ export default class MainView extends React.Component {
                 zoomedArrowRadius
             );
         }
+
         Xe = Xe - ORBIT_CENTER_X;
         Ye = ORBIT_CENTER_Y - Ye;
         Xt = Xt - ORBIT_CENTER_X;
@@ -477,7 +517,7 @@ export default class MainView extends React.Component {
         );
 
         let actualX  = results[1];
-        if (this.targetPlanetContainer.x > this.observerPlanetContainer.x) {
+        if (this.observerPlanetContainer.x > this.targetPlanetContainer.x) {
             actualX = results[0];
         }
         let actualY = slope * actualX + b;

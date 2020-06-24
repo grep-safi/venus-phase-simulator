@@ -45,8 +45,9 @@ export default class TargetPlanetPhase extends React.Component {
 
         this.targetPlanet = this.drawTargetPlanetZodiac();
         this.drawShades();
-        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(0));
+        this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(Math.PI), 1.002 * (275 / 2));
     }
+
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) this.animate();
     }
@@ -192,7 +193,6 @@ export default class TargetPlanetPhase extends React.Component {
         this.targetPlanet.height = targetPlanetSize;
 
         this.hiddenTargetPlanet.visible = true;
-        // this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), 1.0025 * (targetPlanetSize / 2));
         this.drawPhase(this.leftShade, this.rightShade, this.convertPhase(targetElongation), 1.002 * (targetPlanetSize / 2));
     }
 
