@@ -1,5 +1,6 @@
 import React from 'react';
 import * as PIXI from 'pixi.js';
+import * as d3 from 'd3-scale';
 import PropTypes from 'prop-types';
 import {radToDeg} from "./utils";
 
@@ -197,20 +198,23 @@ export default class TargetPlanetPhase extends React.Component {
     }
 
     drawTargetPlanetSize(separationDistance, targetElongation) {
-        const minPixelSize = 50;
         const maxPixelSize = 275;
 
         const minDist = Math.abs(this.props.radiusTargetPlanet - this.props.radiusObserverPlanet);
         const maxDist = this.props.radiusObserverPlanet + this.props.radiusTargetPlanet;
 
-        const linearMinPixelScale = (input) => 100 - ((input - 0.5) / 19.5) * 90;
-        const minRadius = Math.min(this.props.radiusAUObserver, this.props.radiusAUTarget);
-        const minPix = linearMinPixelScale(2 * minRadius);
-        const linearScale = (input) => {
-            return maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPix);
-        }
+        const linearMinPix = d3.scaleLinear()
+            .domain([0.5, 20])
+            .range([150, 20]);
 
-        const targetPlanetSize = linearScale(separationDistance);
+        const minRadius = Math.min(this.props.radiusAUObserver, this.props.radiusAUTarget);
+        const minPix = linearMinPix(minRadius * 2);
+
+        const linearPix = d3.scaleLinear()
+            .domain([maxDist, minDist])
+            .range([minPix, maxPixelSize]);
+
+        const targetPlanetSize = linearPix(separationDistance);
         this.targetPlanet.width = targetPlanetSize;
         this.targetPlanet.height = targetPlanetSize;
 
@@ -227,7 +231,6 @@ export default class TargetPlanetPhase extends React.Component {
         this.distanceText.text = `observer-target distance:\n${Math.round(this.getDistanceBetweenBodies() * 100) / 100} au`;
 
         let num = elongationAngle * 180 / Math.PI;
-        console.log(`nums: ${num}`);
 
         let direction = 'E';
         if (num > 180) {
