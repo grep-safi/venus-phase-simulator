@@ -435,28 +435,8 @@ class PlanetaryConfigSim extends React.Component {
 
     onObserverPlanetAngleUpdate(newAngle) {
         this.stopAnimation();
-        // let diff;
         let newAng = newAngle;
         let prevObserverPlanetAng = this.state.observerPlanetAngle;
-        //
-        // let ninetyDegrees = Math.PI / 2;
-        // if (newAng >= ninetyDegrees && prevObserverPlanetAng <= -ninetyDegrees) {
-        //     diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevObserverPlanetAng));
-        // } else if (newAng <= -ninetyDegrees && prevObserverPlanetAng >= ninetyDegrees) {
-        //     diff = (Math.abs(prevObserverPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
-        // } else {
-        //     diff = newAng - prevObserverPlanetAng;
-        // }
-        //
-        // this.updateMultiplier();
-        // diff *= this.state.targetMultiplier / this.state.observerMultiplier;
-        // let newTargetPlanet = (this.state.targetPlanetAngle + diff);
-        //
-        // if (newTargetPlanet >= Math.PI) {
-        //     newTargetPlanet = -2 * ninetyDegrees;
-        // } else if (newTargetPlanet <= -Math.PI) {
-        //     newTargetPlanet = 2 * ninetyDegrees;
-        // }
 
         this.updateCycles(prevObserverPlanetAng, newAng);
         this.setState({
@@ -470,29 +450,7 @@ class PlanetaryConfigSim extends React.Component {
 
     onTargetPlanetAngleUpdate(newAngle) {
         this.stopAnimation();
-        // let diff;
-        let newAng = newAngle;
-        let prevTargetPlanetAng = this.state.targetPlanetAngle;
 
-        // let ninetyDegrees = Math.PI / 2;
-        // if (newAng >= ninetyDegrees && prevTargetPlanetAng <= -ninetyDegrees) {
-        //     diff = -(Math.abs(newAng - Math.PI) + Math.abs(-Math.PI - prevTargetPlanetAng));
-        // } else if (newAng <= -ninetyDegrees && prevTargetPlanetAng >= ninetyDegrees) {
-        //     diff = (Math.abs(prevTargetPlanetAng - Math.PI) + Math.abs(-Math.PI - newAng));
-        // } else {
-        //     diff = newAng - prevTargetPlanetAng;
-        // }
-        //
-        // this.updateMultiplier();
-        // diff *= this.state.observerMultiplier / this.state.targetMultiplier;
-        // let newObserverPlanet = (this.state.observerPlanetAngle + diff);
-        // if (newObserverPlanet >= Math.PI) {
-        //     newObserverPlanet = -2 * ninetyDegrees;
-        // } else if (newObserverPlanet <= -Math.PI) {
-        //     newObserverPlanet = 2 * ninetyDegrees;
-        // }
-
-        // this.updateCycles(this.state.observerPlanetAngle, newObserverPlanet);
         this.setState({
             isPlaying: false,
             targetPlanetAngle: newAngle,

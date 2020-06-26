@@ -203,7 +203,12 @@ export default class TargetPlanetPhase extends React.Component {
         const minDist = Math.abs(this.props.radiusTargetPlanet - this.props.radiusObserverPlanet);
         const maxDist = this.props.radiusObserverPlanet + this.props.radiusTargetPlanet;
 
-        const linearScale = (input) => maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPixelSize);
+        const linearMinPixelScale = (input) => 200 - ((input - 0.5) / 19.5) * 150;
+        const minRadius = Math.min(this.props.radiusAUObserver, this.props.radiusAUTarget);
+        const minPix = linearMinPixelScale(2 * minRadius);
+        const linearScale = (input) => {
+            return maxPixelSize - ((input - minDist) / (maxDist - minDist)) * (maxPixelSize - minPix);
+        }
 
         const targetPlanetSize = linearScale(separationDistance);
         this.targetPlanet.width = targetPlanetSize;
