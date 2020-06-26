@@ -7,13 +7,13 @@ import {radToDeg} from "./utils";
 const WIDTH = 600;
 const HEIGHT = 300;
 
-const MAINVIEW_WIDTH = 600;
-const MAINVIEW_HEIGHT = 460;
+const MAINVIEW_CENTER_X = 600;
+const MAINVIEW_CENTER_Y = 460;
 
 const getPlanetPos = function(radius, phase) {
     return new PIXI.Point(
-        radius * Math.cos(-phase) + MAINVIEW_WIDTH,
-        radius * Math.sin(-phase) + MAINVIEW_HEIGHT);
+        radius * Math.cos(-phase) + MAINVIEW_CENTER_X,
+        radius * Math.sin(-phase) + MAINVIEW_CENTER_Y);
 };
 
 export default class TargetPlanetPhase extends React.Component {
@@ -114,15 +114,7 @@ export default class TargetPlanetPhase extends React.Component {
     getTargetAngle() {
         let observerPos = getPlanetPos(this.props.radiusObserverPlanet, this.props.observerPlanetAngle);
         let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
-        let sunPos = new PIXI.Point(0, 0);
-
-        observerPos.x -= MAINVIEW_WIDTH;
-        observerPos.y -= MAINVIEW_HEIGHT;
-        observerPos.y *= -1;
-
-        targetPos.x -= MAINVIEW_WIDTH;
-        targetPos.y -= MAINVIEW_HEIGHT;
-        targetPos.y *= -1;
+        let sunPos = new PIXI.Point(MAINVIEW_CENTER_X, MAINVIEW_CENTER_Y);
 
         let targetPlanetAngle = Math.atan2(observerPos.y - targetPos.y, observerPos.x - targetPos.x);
         let sunAngle = Math.atan2(sunPos.y - targetPos.y, sunPos.x - targetPos.x);
@@ -150,12 +142,12 @@ export default class TargetPlanetPhase extends React.Component {
         let targetPos = getPlanetPos(this.props.radiusTargetPlanet, this.props.targetPlanetAngle);
         let sunPos = new PIXI.Point(0, 0);
 
-        observerPos.x -= MAINVIEW_WIDTH;
-        observerPos.y -= MAINVIEW_HEIGHT;
+        observerPos.x -= MAINVIEW_CENTER_X;
+        observerPos.y -= MAINVIEW_CENTER_Y;
         observerPos.y *= -1;
 
-        targetPos.x -= MAINVIEW_WIDTH;
-        targetPos.y -= MAINVIEW_HEIGHT;
+        targetPos.x -= MAINVIEW_CENTER_X;
+        targetPos.y -= MAINVIEW_CENTER_Y;
         targetPos.y *= -1;
 
         let targetPlanetAngle = Math.atan2(targetPos.y - observerPos.y, targetPos.x - observerPos.x);
