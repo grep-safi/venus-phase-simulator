@@ -216,7 +216,6 @@ export default class TargetPlanetPhase extends React.Component {
 
     animate() {
         this.getElongationAngle();
-        // this.updateTexts();
     }
 
     updateTexts(elongationAngle) {

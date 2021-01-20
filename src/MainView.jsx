@@ -367,16 +367,6 @@ export default class MainView extends React.Component {
             return;
         }
 
-        // this.arrowToTarget.moveTo(
-        //     this.observerPlanetContainer.x,
-        //     this.observerPlanetContainer.y
-        // );
-        //
-        // this.arrowToSun.moveTo(
-        //     this.observerPlanetContainer.x,
-        //     this.observerPlanetContainer.y
-        // );
-
         this.arrowToTarget.moveTo(
             this.targetPlanetContainer.x,
             this.targetPlanetContainer.y
@@ -397,14 +387,6 @@ export default class MainView extends React.Component {
         let throughTarget = this.getThroughTarget(arrowRadius, zoomArrowRad);
 
         this.arrowToTarget.lineTo(throughTarget.x, throughTarget.y);
-
-        // let throughSun = this.arrowThroughBody (
-        //     this.sun.x,
-        //     this.sun.y,
-        //     this.observerPlanetContainer.x,
-        //     this.observerPlanetContainer.y,
-        //     arrowRadius
-        // );
 
         let throughSun = this.arrowThroughBody (
             this.sun.x,
@@ -468,16 +450,6 @@ export default class MainView extends React.Component {
     }
 
     getThroughTarget(arrowRadius, zoomedArrowRadius) {
-
-        // let radTarget = this.props.radiusTargetPlanet;
-        // let radObs = this.props.radiusObserverPlanet;
-        //
-        // let Xe = this.observerPlanetContainer.x;
-        // let Ye = this.observerPlanetContainer.y;
-        //
-        // let Xt = this.targetPlanetContainer.x;
-        // let Yt = this.targetPlanetContainer.y;
-
         let radTarget = this.props.radiusObserverPlanet;
         let radObs = this.props.radiusTargetPlanet;
 
@@ -486,16 +458,6 @@ export default class MainView extends React.Component {
 
         let Xt = this.observerPlanetContainer.x;
         let Yt = this.observerPlanetContainer.y;
-
-        // if (radTarget > radObs) {
-        //     return this.arrowThroughBody (
-        //         Xt,
-        //         Yt,
-        //         Xe,
-        //         Ye,
-        //         zoomedArrowRadius
-        //     );
-        // }
 
         if (radTarget > radObs) {
             return this.arrowThroughBody (
@@ -618,7 +580,6 @@ export default class MainView extends React.Component {
             .on('touchmove', this.onObserverPlanetMove);
 
         this.app.stage.addChild(observerPlanetContainer);
-        // this.app.stage.addChild(shade);
         return observerPlanetContainer;
     }
 
